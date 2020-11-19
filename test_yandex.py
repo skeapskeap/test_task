@@ -17,7 +17,7 @@ class Yandex(unittest.TestCase):
         driver = self.driver
 
         try:
-            search_field = driver.find_element_by_xpath('//*[@id="text"]')
+            search_field = driver.find_element_by_xpath('//input[@id="text"]')
         except ex.NoSuchElementException:
             raise AssertionError('Нет поля поиска')
 
@@ -43,12 +43,31 @@ class Yandex(unittest.TestCase):
             raise AssertionError('В результатах поиска нет ссылок')
 
         for url in self.urls:
-            print(url)
-            if 'tensorк.ru' in url:
+            if 'tensor.ru' in url:
                 break
         else:
             raise AssertionError('tensor.ru нет в результатах поиска')
 
+        assert True
+
+    def test_02(self):
+        driver = self.driver
+
+        try:
+            images = driver.find_element_by_xpath('//a[@data-id="images"]')
+        except ex.NoSuchElementException:
+            raise AssertionError('Нет ссылки на картинки')
+
+        images.click()
+        sleep(2)
+        try:
+            new_win = driver.window_handles[1]  # выбираем вторую из открытых вкладок
+            driver.switch_to.window(new_win)    # говорим драйверу смотреть на неё
+        except IndexError:
+            raise AssertionError('Картинки не открылись')
+
+        if not driver.current_url.startswith('https://yandex.ru/images/'):
+            raise AssertionError('Открылись не картинки')
         assert True
 
     def tearDown(self):
