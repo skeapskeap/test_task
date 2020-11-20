@@ -12,15 +12,17 @@ class Yandex(unittest.TestCase):
     def setUp(self):
         self.driver = webdriver.Chrome(PATH)
         self.driver.get('https://yandex.ru')
-
+    '''
     def test_01(self):
         driver = self.driver
 
+        # проверка наличия поля поиска
         try:
             search_field = driver.find_element_by_xpath('//input[@id="text"]')
         except ex.NoSuchElementException:
             raise AssertionError('Нет поля поиска')
 
+        # проверка наличия подсказок
         search_field.send_keys('Тензор')
         sleep(1)
         try:
@@ -31,25 +33,29 @@ class Yandex(unittest.TestCase):
         search_field.send_keys(Keys.ENTER)
         sleep(3)
 
+        # проверка наличия результатов поиска
         try:
-            search_results = driver.find_elements_by_class_name('serp-item')[:5]
+            results = driver.find_elements_by_class_name('serp-item')[:5]
+            first_five = results[:5]
         except ex.NoSuchElementException:
             raise AssertionError('Нет результатов поиска')
 
+        # проверка наличия ссылок в результатах поиска
         try:
-            links = [item.find_element_by_class_name('link') for item in search_results]
+            links = [
+                item.find_element_by_class_name('link') for item in first_five
+                ]
             self.urls = [link.get_attribute('href') for link in links]
         except ex.NoSuchElementException:
             raise AssertionError('В результатах поиска нет ссылок')
 
-        for url in self.urls:
-            if 'tensor.ru' in url:
-                break
-        else:
+        # проверка вхождения tensor.ru в результаты поиска
+        match = list(filter(lambda url: 'tensor.ru' in url, self.urls))
+        if not match:
             raise AssertionError('tensor.ru нет в результатах поиска')
 
         assert True
-
+    '''
     def test_02(self):
         driver = self.driver
 
@@ -68,7 +74,16 @@ class Yandex(unittest.TestCase):
 
         if not driver.current_url.startswith('https://yandex.ru/images/'):
             raise AssertionError('Открылись не картинки')
-        assert True
+
+        firts_category = driver.find_element_by_xpath('//div[@class="PopularRequestList-SearchText"]')
+        firts_category_name = firts_category.text
+        print(firts_category_name)
+
+        firts_category.click()
+        sleep(4)
+
+        input_field = driver.find_element_by_xpath('//input[@class="input__control" ]')
+        print(input_field.get_attribute('value'))
 
     def tearDown(self):
         self.driver.quit()
