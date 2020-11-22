@@ -37,5 +37,17 @@ class YandexSearch(BaseTest):
         self.try_(results_page.keyword_in_results)
 
 
+class YandexPics(BaseTest):
+
+    def test_pics(self):
+        main_page = page.YandexPictures(self.driver)
+        self.try_(main_page.pictures_icon_exists)
+        self.try_(main_page.click_pics_icon)
+        galery_page = page.GaleryPage(self.driver)
+        galery_page.switch_window()
+        self.try_(galery_page.check_opened_url)
+        self.try_(galery_page.open_first_category)
+
+
 if __name__ == '__main__':
     unittest.main()
