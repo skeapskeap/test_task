@@ -1,7 +1,6 @@
 from selenium.webdriver.common.by import By
 
-CHROME_PATH = "C:\\Py\\test_task\\chromedriver.exe"
-IMG_FILE = "C:\\Py\\test_task\\images\\picture"
+CHROME_PATH = "abs path to chromedriver.exe"
 
 
 class YandexStartPageLocators():
@@ -16,6 +15,7 @@ class SearchResultsPageLocators():
 
 class PicturesPageLocators():
     PICTURES_ICON = (By.XPATH, '//a[@data-id="images"]')
+    GALERY_URL = 'https://yandex.ru/images/'
     GALERY_CATEGORIES = (By.XPATH, '//div[@class="PopularRequestList-SearchText"]')
     PICTRURES_IN_GALERY = (By.XPATH, '//a[@class="serp-item__link"]')
     OPENED_PICTURE = (By.XPATH, '//img[@class="MMImage-Origin"]')

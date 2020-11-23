@@ -1,12 +1,11 @@
 from element import SearchFieldElement
 from locator import YandexStartPageLocators, SearchResultsPageLocators
-from locator import PicturesPageLocators, IMG_FILE
+from locator import PicturesPageLocators
 from selenium.common import exceptions as exc
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
-from urllib.request import urlretrieve
+from urllib.request import urlopen
 import hashlib
 
 
@@ -32,6 +31,10 @@ class BasePage():
         except exc.TimeoutException:
             return False
 
+    def press_button(self, key):
+        button = ActionChains(self.driver).send_keys(key)
+        button.perform()
+
 
 class YandexPage(BasePage):
 
@@ -44,13 +47,6 @@ class YandexPage(BasePage):
     def find_suggests(self):
         return self.find_element(
             YandexStartPageLocators.SUGGESTS)
-
-    def press_enter(self):
-        search_field = self.find_search_field()
-        if search_field:
-            search_field.send_keys(Keys.ENTER)
-            return True
-        return False
 
 
 class SearchResultPage(BasePage):
@@ -106,7 +102,7 @@ class GaleryPage(BasePage):
 
     def check_opened_url(self):
         current_url = self.driver.current_url
-        if current_url.startswith('https://yandex.ru/images/'):
+        if current_url.startswith(PicturesPageLocators.GALERY_URL):
             return True
         return False
 
@@ -121,7 +117,7 @@ class GaleryPage(BasePage):
         return False
 
 
-class PicturesPage(BasePage):
+class GaleryPictures(BasePage):
 
     images_hash = []
 
@@ -134,7 +130,7 @@ class PicturesPage(BasePage):
         else:
             return False
 
-    def pic_open_success(self):
+    def check_opened_picture(self):
         opened_picture = self.find_element(
             PicturesPageLocators.OPENED_PICTURE)
         if opened_picture:
@@ -143,21 +139,12 @@ class PicturesPage(BasePage):
         return False
 
     def get_hash(self, pic_obj):
-        pic_url = pic_obj.get_attribute('src')
-        urlretrieve(pic_url, IMG_FILE)
         hasher = hashlib.md5()
-        # read file as binary
-        with open(IMG_FILE, 'rb') as f:
-            hasher.update(f.read())
-            self.images_hash.append(hasher.hexdigest())
-            print(self.images_hash)
-
-    def press_arrow(self, direction='right'):
-        if direction == 'left':
-            arrow = ActionChains(self.driver).send_keys(Keys.LEFT)
-        else:
-            arrow = ActionChains(self.driver).send_keys(Keys.RIGHT)
-        arrow.perform()
+        pic_url = pic_obj.get_attribute('src')
+        img_file = urlopen(pic_url).read()
+        hasher.update(img_file)
+        img_hash = hasher.hexdigest()
+        self.images_hash.append(img_hash)
 
     def compare_images(self):
         if self.images_hash[0] == self.images_hash[-1]:

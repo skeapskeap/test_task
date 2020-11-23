@@ -1,8 +1,8 @@
 from locator import CHROME_PATH
 from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
 import page
 import unittest
-from time import sleep
 
 
 class BaseTest(unittest.TestCase):
@@ -22,7 +22,7 @@ class BaseTest(unittest.TestCase):
         self.assertEqual([], self.verificationErrors)
         self.driver.quit()
 
-'''
+
 class YandexSearch(BaseTest):
 
     def test_search(self):
@@ -30,12 +30,10 @@ class YandexSearch(BaseTest):
         self.try_(main_page.find_search_field)
         main_page.search_input = 'Тензор'
         self.try_(main_page.find_suggests)
-        self.try_(main_page.press_enter)
-
+        main_page.press_button(Keys.ENTER)
         results_page = page.SearchResultPage(self.driver)
         self.try_(results_page.find_search_results)
         self.try_(results_page.keyword_in_results)
-'''
 
 
 class YandexPics(BaseTest):
@@ -50,18 +48,19 @@ class YandexPics(BaseTest):
         self.try_(galery_page.check_opened_url)
         self.try_(galery_page.open_first_category)
 
-        pictures_page = page.PicturesPage(self.driver)
+        pictures_page = page.GaleryPictures(self.driver)
         self.try_(pictures_page.click_first_picture)
-        self.try_(pictures_page.pic_open_success)
-        sleep(2)
-        pictures_page.press_arrow('right')
-        self.try_(pictures_page.pic_open_success)
-        sleep(2)
-        pictures_page.press_arrow('left')
-        self.try_(pictures_page.pic_open_success)
-        sleep(2)
+        pictures_page.press_button(Keys.ESCAPE)
+        # первые доли секунды вместо картинки отображается превью
+        # с точно такими же атрибутами, но другим 'src'
+        # более элегантного способа не родилось
+        self.try_(pictures_page.click_first_picture)
+        self.try_(pictures_page.check_opened_picture)
+        pictures_page.press_button(Keys.RIGHT)
+        self.try_(pictures_page.check_opened_picture)
+        pictures_page.press_button(Keys.LEFT)
+        self.try_(pictures_page.check_opened_picture)
         self.try_(pictures_page.compare_images)
-        sleep(2)
 
 
 if __name__ == '__main__':
