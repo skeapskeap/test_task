@@ -102,9 +102,7 @@ class GaleryPage(BasePage):
 
     def check_opened_url(self):
         current_url = self.driver.current_url
-        if current_url.startswith(PicturesPageLocators.GALERY_URL):
-            return True
-        return False
+        return current_url.startswith(PicturesPageLocators.GALERY_URL)
 
     def open_first_category(self):
         first_category = self.find_element(
@@ -112,9 +110,7 @@ class GaleryPage(BasePage):
         first_category_name = first_category.text
         first_category.click()
         opened_category_name = self.search_input
-        if first_category_name == opened_category_name:
-            return True
-        return False
+        return first_category_name == opened_category_name
 
 
 class GaleryPictures(BasePage):
@@ -147,6 +143,4 @@ class GaleryPictures(BasePage):
         self.images_hash.append(img_hash)
 
     def compare_images(self):
-        if self.images_hash[0] == self.images_hash[-1]:
-            return True
-        return False
+        return self.images_hash[0] == self.images_hash[-1]
