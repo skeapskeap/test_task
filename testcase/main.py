@@ -43,12 +43,12 @@ class YandexPics(BaseTest):
         self.try_(main_page.find_pictures_icon)
         self.try_(main_page.click_pics_icon)
 
-        galery_page = page.GaleryPage(self.driver)
-        galery_page.switch_window()
-        self.try_(galery_page.check_opened_url)
-        self.try_(galery_page.open_first_category)
+        gallery_page = page.GalleryPage(self.driver)
+        gallery_page.switch_window()
+        self.try_(gallery_page.check_opened_url)
+        self.try_(gallery_page.open_first_category)
 
-        pictures_page = page.GaleryPictures(self.driver)
+        pictures_page = page.GalleryPictures(self.driver)
         self.try_(pictures_page.click_first_picture)
         pictures_page.press_button(Keys.ESCAPE)
         # первые доли секунды вместо картинки отображается превью
@@ -60,7 +60,7 @@ class YandexPics(BaseTest):
         self.try_(pictures_page.check_opened_picture)
         pictures_page.press_button(Keys.LEFT)
         self.try_(pictures_page.check_opened_picture)
-        self.try_(page.GaleryPictures.compare_images)
+        self.try_(page.GalleryPictures.compare_images)
 
 
 if __name__ == '__main__':

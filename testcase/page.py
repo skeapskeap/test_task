@@ -92,7 +92,7 @@ class YandexPictures(BasePage):
         return False
 
 
-class GaleryPage(BasePage):
+class GalleryPage(BasePage):
 
     search_input = SearchFieldElement()
 
@@ -102,24 +102,24 @@ class GaleryPage(BasePage):
 
     def check_opened_url(self):
         current_url = self.driver.current_url
-        return current_url.startswith(PicturesPageLocators.GALERY_URL)
+        return current_url.startswith(PicturesPageLocators.GALLERY_URL)
 
     def open_first_category(self):
         first_category = self.find_element(
-            PicturesPageLocators.GALERY_CATEGORIES)
+            PicturesPageLocators.GALLERY_CATEGORIES)
         first_category_name = first_category.text
         first_category.click()
         opened_category_name = self.search_input
         return first_category_name == opened_category_name
 
 
-class GaleryPictures(BasePage):
+class GalleryPictures(BasePage):
 
     images_hash = []
 
     def click_first_picture(self):
         first_picture = self.find_element(
-            PicturesPageLocators.PICTRURES_IN_GALERY)
+            PicturesPageLocators.PICTRURES_IN_GALLERY)
         if first_picture:
             first_picture.click()
             return True
@@ -130,7 +130,7 @@ class GaleryPictures(BasePage):
         opened_picture = self.find_element(
             PicturesPageLocators.OPENED_PICTURE)
         if opened_picture:
-            GaleryPictures.get_hash(opened_picture)
+            GalleryPictures.get_hash(opened_picture)
             return True
         return False
 
@@ -141,8 +141,8 @@ class GaleryPictures(BasePage):
         img_file = urlopen(pic_url).read()
         hasher.update(img_file)
         img_hash = hasher.hexdigest()
-        GaleryPictures.images_hash.append(img_hash)
+        GalleryPictures.images_hash.append(img_hash)
 
     @staticmethod
     def compare_images():
-        return GaleryPictures.images_hash[0] == GaleryPictures.images_hash[-1]
+        return GalleryPictures.images_hash[0] == GalleryPictures.images_hash[-1]

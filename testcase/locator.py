@@ -15,7 +15,7 @@ class SearchResultsPageLocators():
 
 class PicturesPageLocators():
     PICTURES_ICON = (By.XPATH, '//a[@data-id="images"]')
-    GALERY_URL = 'https://yandex.ru/images/'
-    GALERY_CATEGORIES = (By.XPATH, '//div[@class="PopularRequestList-SearchText"]')
-    PICTRURES_IN_GALERY = (By.XPATH, '//a[@class="serp-item__link"]')
+    GALLERY_URL = 'https://yandex.ru/images/'
+    GALLERY_CATEGORIES = (By.XPATH, '//div[@class="PopularRequestList-SearchText"]')
+    PICTRURES_IN_GALLERY = (By.XPATH, '//a[@class="serp-item__link"]')
     OPENED_PICTURE = (By.XPATH, '//img[@class="MMImage-Origin"]')
