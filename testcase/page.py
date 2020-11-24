@@ -130,17 +130,19 @@ class GaleryPictures(BasePage):
         opened_picture = self.find_element(
             PicturesPageLocators.OPENED_PICTURE)
         if opened_picture:
-            self.get_hash(opened_picture)
+            GaleryPictures.get_hash(opened_picture)
             return True
         return False
 
-    def get_hash(self, pic_obj):
+    @staticmethod
+    def get_hash(pic_obj):
         hasher = hashlib.md5()
         pic_url = pic_obj.get_attribute('src')
         img_file = urlopen(pic_url).read()
         hasher.update(img_file)
         img_hash = hasher.hexdigest()
-        self.images_hash.append(img_hash)
+        GaleryPictures.images_hash.append(img_hash)
 
-    def compare_images(self):
-        return self.images_hash[0] == self.images_hash[-1]
+    @staticmethod
+    def compare_images():
+        return GaleryPictures.images_hash[0] == GaleryPictures.images_hash[-1]

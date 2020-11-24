@@ -60,7 +60,7 @@ class YandexPics(BaseTest):
         self.try_(pictures_page.check_opened_picture)
         pictures_page.press_button(Keys.LEFT)
         self.try_(pictures_page.check_opened_picture)
-        self.try_(pictures_page.compare_images)
+        self.try_(page.GaleryPictures.compare_images)
 
 
 if __name__ == '__main__':
